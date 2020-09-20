@@ -16,16 +16,16 @@ const ColorPickerTile = ({ color, onColorChange }: Props) => {
           color={color}
           onClick={() => setPickerOpen(prev => !prev)}
         />
+        {pickerOpen && (
+          <Styled.ColorPicker
+            color={color}
+            onChange={({ hex }) => {
+              onColorChange(hex);
+              setPickerOpen(prev => !prev);
+            }}
+          />
+        )}
       </Styled.ColorTile>
-      {pickerOpen && (
-        <Styled.ColorPicker
-          color={color}
-          onChange={({ hex }) => {
-            onColorChange(hex);
-            setPickerOpen(prev => !prev);
-          }}
-        />
-      )}
     </>
   );
 };

@@ -19,8 +19,7 @@ const ShiftTypes = ({ workplace }: Props) => {
   const [shiftTypes, setShiftTypes] = useState<ShiftTypeDto[]>([]);
 
   const onPropChange = (
-    value: string,
-    dataIndex: keyof ShiftTypeDto,
+    changes: Partial<ShiftTypeDto>,
     recordId: string,
   ) => {
     const newData = [...shiftTypes];
@@ -28,7 +27,7 @@ const ShiftTypes = ({ workplace }: Props) => {
     const item = shiftTypes[index];
     const updatedItem = {
       ...item,
-      ...{ [dataIndex]: value },
+      ...changes,
     };
     newData.splice(index, 1, updatedItem);
     setShiftTypes(newData);

@@ -3,14 +3,13 @@ import { Button, Table } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import { ShiftTypeDto } from 'api/modules/workplaces/dto/shift-type.dto';
 import React from 'react';
-import ColorPickerTile from '../ColorPickerTile';
-import PositionPicker from '../PositionPicker';
+import VisualizationPicker from '../VisualizationPicker';
 import { EditableCell } from './EditableCell';
 import { EditableRow } from './EditableRow';
 
 type Props = {
   data: ShiftTypeDto[],
-  onPropChange: (name: string, dataIndex: keyof ShiftTypeDto, recordId: string, data: ShiftTypeDto[]) => any;
+  onPropChange: (changes: Partial<ShiftTypeDto>, recordId: string, data: ShiftTypeDto[]) => any;
 }
 
 export const ShiftTypesTable = ({ data, onPropChange }: Props) => {
@@ -32,23 +31,12 @@ export const ShiftTypesTable = ({ data, onPropChange }: Props) => {
       }),
     },
     {
-      title: 'Position',
-      dataIndex: 'position',
-      render: (position, record) => (
-        <PositionPicker
-          position={position}
-          color={record.backgroundColor}
-          onChange={position => onPropChange(position, 'position', record.id, data) }
-        />
-      ),
-    },
-    {
-      title: 'Color',
-      dataIndex: 'backgroundColor',
-      render: (color, record, index) => (
-        <ColorPickerTile
-          color={color}
-          onColorChange={color => onPropChange(color, 'backgroundColor', record.id, data) }
+      title: 'Visualization',
+      render: (placeholderParam, record) => (
+        <VisualizationPicker
+          position={record.position}
+          backgroundColor={record.backgroundColor}
+          onChange={changes => onPropChange(changes, record.id, data) }
         />
       ),
     }, {

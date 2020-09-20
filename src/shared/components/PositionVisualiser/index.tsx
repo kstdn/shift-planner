@@ -2,7 +2,11 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import { ShiftTypePosition } from 'api/modules/workplaces/dto/shift-type-position.enum';
 
-const Container = styled.div`
+type ContainerProps = {
+  highlight: boolean;
+}
+
+const Container = styled.div<ContainerProps>`
   display: inline-block;
   width: 100%;
   height: 100%;
@@ -11,7 +15,8 @@ const Container = styled.div`
   position: relative;
   box-shadow: 0 0 0 1px rgba(0,0,0,.1);
   background-color: white;
-  ${props => !!props.onClick ? 'cursor: pointer' : ''}
+  ${props => !!props.onClick ? 'cursor: pointer;' : ''}
+  ${props => !!props.highlight ? 'box-shadow: 0 0 2px 0;' : ''}
 `;
 
 type PositionTileProps = {
@@ -84,12 +89,13 @@ const PositionTile = styled.div<PositionTileProps>`
 type Props = {
   position: ShiftTypePosition;
   color: string;
+  highlight?: boolean;
   onClick?: () => any;
 };
 
-const PositionVisualiser = ({ position, color, onClick }: Props) => {
+const PositionVisualiser = ({ position, color, highlight = false, onClick }: Props) => {
   return (
-    <Container onClick={onClick}>
+    <Container onClick={onClick} highlight={highlight}>
       <PositionTile position={position} color={color} />
     </Container>
   );
