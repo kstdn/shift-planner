@@ -16,9 +16,9 @@ export const createShiftType = (workplaceId: string, shiftTypeDto: ShiftTypeDto)
 };
 
 export const updateShiftType = (shiftTypeDto: ShiftTypeDto) => {
-  return httpClient.patch<ShiftTypeDto, ShiftTypeDto>(`${ApiRoute.ShiftTypes(shiftTypeDto.workplaceId)}/${shiftTypeDto.id}`, shiftTypeDto);
+  return httpClient.patch<ShiftTypeDto, ShiftTypeDto>(`${ApiRoute.ShiftTypes(shiftTypeDto.workplaceId!)}/${shiftTypeDto.id}`, shiftTypeDto);
 };
 
 export const deleteShiftType = (shiftTypeDto: ShiftTypeDto) => {
-  return httpClient.delete<ShiftTypeDto, ShiftTypeDto>(`${ApiRoute.ShiftTypes(shiftTypeDto.workplaceId)}/${shiftTypeDto.id}`);
+  return httpClient.delete<ShiftTypeDto, ShiftTypeDto>(`${ApiRoute.ShiftTypes(shiftTypeDto.workplaceId!)}/${shiftTypeDto.id}`);
 };

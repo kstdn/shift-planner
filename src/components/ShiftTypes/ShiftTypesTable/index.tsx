@@ -14,7 +14,7 @@ type Props = {
     recordId: string,
     data: ShiftTypeDto[],
   ) => any;
-  onDeleteClick: (shiftTyepDto: ShiftTypeDto) => any;
+  onDeleteClick: (shiftTypeDto: ShiftTypeDto) => any;
 };
 
 export const ShiftTypesTable = ({
@@ -46,7 +46,7 @@ export const ShiftTypesTable = ({
         <VisualizationPicker
           position={record.position}
           backgroundColor={record.backgroundColor}
-          onChange={changes => onPropChange(changes, record.id, data)}
+          onChange={changes => onPropChange(changes, record.id!, data)}
         />
       ),
     },

@@ -16,7 +16,7 @@ interface EditableCellProps {
   children: ReactNode;
   dataIndex: keyof ShiftTypeDto;
   record: ShiftTypeDto;
-  onPropChange: (value: string, dataIndex: keyof ShiftTypeDto,  recordId: string) => void;
+  onPropChange: (changes: Partial<ShiftTypeDto>,  recordId: string) => void;
 }
 
 export const EditableCell: FC<EditableCellProps> = ({
@@ -49,7 +49,7 @@ export const EditableCell: FC<EditableCellProps> = ({
       toggleEdit();
 
       if(values[dataIndex] !== record[dataIndex]) {
-        onPropChange(values[dataIndex], dataIndex, record.id);
+        onPropChange({ [dataIndex]: values[dataIndex] }, record.id!);
       }
 
     } catch (errInfo) {

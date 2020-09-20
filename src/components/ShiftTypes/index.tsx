@@ -1,4 +1,4 @@
-import { getShiftTypes, updateShiftType, deleteShiftType } from 'api/modules/workplaces';
+import { getShiftTypes, updateShiftType, deleteShiftType, createShiftType } from 'api/modules/workplaces';
 import { ShiftTypeDto } from 'api/modules/workplaces/dto/shift-type.dto';
 import { WorkplaceDto } from 'api/modules/workplaces/dto/workplace.dto';
 import React, { useEffect, useState } from 'react';
@@ -16,6 +16,7 @@ import { ShiftTypesTable } from './ShiftTypesTable';
 import * as Styled from './styled';
 import { Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { ShiftTypePosition } from 'api/modules/workplaces/dto/shift-type-position.enum';
 
 const { confirm } = Modal;
 
@@ -34,6 +35,21 @@ type Props = {
 const ShiftTypes = ({ workplace }: Props) => {
   const [status, setStatus] = useState(Status.Idle);
   const [shiftTypes, setShiftTypes] = useState<ShiftTypeDto[]>([]);
+
+  const onAddClick = () => {
+    showLoadingMessage();
+    createShiftType(workplace.id, {
+      name: 'New Shift Type',
+      sortOrder: 1,
+      position: ShiftTypePosition.TopLeft,
+      backgroundColor: 'blue',
+    })
+    .then(shiftTypeDto => {
+      setShiftTypes(prev => [shiftTypeDto, ...prev]);
+      showSuccessMessage();
+    })
+    .catch(showErrorMessage);
+  }
 
   const onPropChange = (changes: Partial<ShiftTypeDto>, recordId: string) => {
     const newData = [...shiftTypes];
@@ -86,7 +102,7 @@ const ShiftTypes = ({ workplace }: Props) => {
           <>
             <Styled.TableHeader>
               <span>Shift Types</span>
-              <Plus onClick={initCreatingShiftType} />
+              <Plus onClick={onAddClick} />
             </Styled.TableHeader>
             <ShiftTypesTable
               data={shiftTypes}
