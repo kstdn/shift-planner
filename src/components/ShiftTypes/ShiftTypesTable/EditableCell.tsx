@@ -16,7 +16,7 @@ interface EditableCellProps {
   children: ReactNode;
   dataIndex: keyof ShiftTypeDto;
   record: ShiftTypeDto;
-  handleSave: (record: ShiftTypeDto) => void;
+  onPropChange: (value: string, dataIndex: keyof ShiftTypeDto,  recordId: string) => void;
 }
 
 export const EditableCell: FC<EditableCellProps> = ({
@@ -25,7 +25,7 @@ export const EditableCell: FC<EditableCellProps> = ({
   children,
   dataIndex,
   record,
-  handleSave,
+  onPropChange,
   ...restProps
 }) => {
   const [editing, setEditing] = useState(false);
@@ -43,11 +43,15 @@ export const EditableCell: FC<EditableCellProps> = ({
     form.setFieldsValue({ [dataIndex]: record[dataIndex] });
   };
 
-  const save = async () => {
+  const handleChange = async () => {
     try {
       const values = await form.validateFields();
       toggleEdit();
-      handleSave({ ...record, ...values });
+
+      if(values[dataIndex] !== record[dataIndex]) {
+        onPropChange(values[dataIndex], dataIndex, record.id);
+      }
+
     } catch (errInfo) {
       console.log('Save failed:', errInfo);
     }
@@ -67,7 +71,7 @@ export const EditableCell: FC<EditableCellProps> = ({
           },
         ]}
       >
-        <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+        <Input ref={inputRef} onPressEnter={handleChange} onBlur={handleChange} />
       </Form.Item>
     ) : (
       <div

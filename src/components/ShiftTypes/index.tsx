@@ -1,5 +1,4 @@
-import { getShiftTypes } from 'api/modules/workplaces';
-import { ShiftTypePosition } from 'api/modules/workplaces/dto/shift-type-position.enum';
+import { getShiftTypes, updateShiftType } from 'api/modules/workplaces';
 import { ShiftTypeDto } from 'api/modules/workplaces/dto/shift-type.dto';
 import { WorkplaceDto } from 'api/modules/workplaces/dto/workplace.dto';
 import React, { useEffect, useState } from 'react';
@@ -9,6 +8,7 @@ import { PageError } from 'shared/components/PageError';
 import { Status } from 'util/status';
 import { ShiftTypesTable } from './ShiftTypesTable';
 import * as Styled from './styled';
+import { showLoadingMessage, showSuccessMessage, showErrorMessage } from 'util/messages';
 
 type Props = {
   workplace: WorkplaceDto;
@@ -18,15 +18,25 @@ const ShiftTypes = ({ workplace }: Props) => {
   const [status, setStatus] = useState(Status.Idle);
   const [shiftTypes, setShiftTypes] = useState<ShiftTypeDto[]>([]);
 
-  const handleSave = (record: ShiftTypeDto) => {
+  const onPropChange = (
+    value: string,
+    dataIndex: keyof ShiftTypeDto,
+    recordId: string,
+  ) => {
     const newData = [...shiftTypes];
-    const index = newData.findIndex(item => record.id === item.id);
-    const item = newData[index];
-    newData.splice(index, 1, {
+    const index = newData.findIndex(item => recordId === item.id);
+    const item = shiftTypes[index];
+    const updatedItem = {
       ...item,
-      ...record,
-    });
+      ...{ [dataIndex]: value },
+    };
+    newData.splice(index, 1, updatedItem);
     setShiftTypes(newData);
+
+    showLoadingMessage();
+    updateShiftType(updatedItem)
+      .then(showSuccessMessage)
+      .catch(showErrorMessage);
   };
 
   useEffect(() => {
@@ -43,18 +53,6 @@ const ShiftTypes = ({ workplace }: Props) => {
 
   const initCreatingShiftType = () => {};
 
-  const onPositionChange = (position: ShiftTypePosition, index: number) =>
-    setShiftTypes(prev => {
-      prev![index].position = position;
-      return [...prev!];
-    });
-
-  const onColorChange = (color: string, index: number) =>
-    setShiftTypes(prev => {
-      prev![index].backgroundColor = color;
-      return [...prev!];
-    });
-
   return (
     <>
       {status === Status.Loading && <Loader />}
@@ -66,12 +64,7 @@ const ShiftTypes = ({ workplace }: Props) => {
             <span>Shift Types</span>
             <Plus onClick={initCreatingShiftType} />
           </Styled.TableHeader>
-          <ShiftTypesTable
-            data={shiftTypes}
-            onPositionChange={onPositionChange}
-            onColorChange={onColorChange}
-            handleSave={handleSave}
-          />
+          <ShiftTypesTable data={shiftTypes} onPropChange={onPropChange} />
         </Styled.ShiftTypesContainer>
       )}
     </>

@@ -10,3 +10,11 @@ export const getWorkplaces = () => {
 export const getShiftTypes = (workplaceId: string) => {
   return httpClient.get<ShiftTypeDto[], ShiftTypeDto[]>(ApiRoute.ShiftTypes(workplaceId));
 };
+
+export const createShiftType = (workplaceId: string, shiftTypeDto: ShiftTypeDto) => {
+  return httpClient.post<ShiftTypeDto, ShiftTypeDto>(ApiRoute.ShiftTypes(workplaceId), shiftTypeDto);
+};
+
+export const updateShiftType = (shiftTypeDto: ShiftTypeDto) => {
+  return httpClient.patch<ShiftTypeDto, ShiftTypeDto>(`${ApiRoute.ShiftTypes(shiftTypeDto.workplaceId)}/${shiftTypeDto.id}`, shiftTypeDto);
+};

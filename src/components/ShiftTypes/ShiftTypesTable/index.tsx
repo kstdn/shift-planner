@@ -1,23 +1,25 @@
-import { Table } from 'antd';
+import { DeleteTwoTone } from '@ant-design/icons';
+import { Button, Table } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-import { ShiftTypePosition } from 'api/modules/workplaces/dto/shift-type-position.enum';
 import { ShiftTypeDto } from 'api/modules/workplaces/dto/shift-type.dto';
-import React, { useState } from 'react';
+import React from 'react';
 import ColorPickerTile from '../ColorPickerTile';
 import PositionPicker from '../PositionPicker';
-import { EditableRow } from './EditableRow';
 import { EditableCell } from './EditableCell';
+import { EditableRow } from './EditableRow';
 
 type Props = {
   data: ShiftTypeDto[],
-  onPositionChange: (position: ShiftTypePosition, index: number) => any,
-  onColorChange: (color: string, index: number) => any,
-  handleSave: (record: ShiftTypeDto) => any;
+  onPropChange: (name: string, dataIndex: keyof ShiftTypeDto, recordId: string, data: ShiftTypeDto[]) => any;
 }
 
-export const ShiftTypesTable = ({ data, onPositionChange, onColorChange, handleSave }: Props) => {
-  const [columns, setColumns] = useState<ColumnsType<ShiftTypeDto>>([
+export const ShiftTypesTable = ({ data, onPropChange }: Props) => {
+  const columns: ColumnsType<ShiftTypeDto> = [
     {
+      title: 'Order',
+      dataIndex: 'sortOrder',
+      width: '75px',
+    },{
       title: 'Name',
       dataIndex: 'name',
       width: '200px',
@@ -26,17 +28,17 @@ export const ShiftTypesTable = ({ data, onPositionChange, onColorChange, handleS
         editable: true,
         dataIndex: 'name',
         title: 'Name',
-        handleSave,
+        onPropChange,
       }),
     },
     {
       title: 'Position',
       dataIndex: 'position',
-      render: (position, record, index) => (
+      render: (position, record) => (
         <PositionPicker
           position={position}
           color={record.backgroundColor}
-          onChange={position => onPositionChange(position, index) }
+          onChange={position => onPropChange(position, 'position', record.id, data) }
         />
       ),
     },
@@ -46,11 +48,15 @@ export const ShiftTypesTable = ({ data, onPositionChange, onColorChange, handleS
       render: (color, record, index) => (
         <ColorPickerTile
           color={color}
-          onColorChange={color => onColorChange(color, index) }
+          onColorChange={color => onPropChange(color, 'backgroundColor', record.id, data) }
         />
       ),
-    },
-  ]);
+    }, {
+      title: '',
+      align: 'right',
+      render: () => <Button icon={<DeleteTwoTone />}></Button> 
+    }
+  ];
 
   const components = {
     body: {

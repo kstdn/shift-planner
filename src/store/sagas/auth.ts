@@ -45,7 +45,7 @@ export function* watchRefreshTokenFailure() {
 }
 
 function* refreshTokenFailureWorker() {
-  yield put(push(Route.Root));
+  yield put(push(Route.Authentication));
 }
 
 export function* authSaga() {

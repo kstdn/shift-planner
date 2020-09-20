@@ -6,4 +6,5 @@ export type ShiftTypeDto = {
   sortOrder: number;
   position: ShiftTypePosition;
   backgroundColor: string;
+  workplaceId: string;
 };
