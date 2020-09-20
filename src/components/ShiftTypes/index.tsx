@@ -1,14 +1,31 @@
-import { getShiftTypes, updateShiftType } from 'api/modules/workplaces';
+import { getShiftTypes, updateShiftType, deleteShiftType } from 'api/modules/workplaces';
 import { ShiftTypeDto } from 'api/modules/workplaces/dto/shift-type.dto';
 import { WorkplaceDto } from 'api/modules/workplaces/dto/workplace.dto';
 import React, { useEffect, useState } from 'react';
-import { Loader, Plus } from 'react-feather';
+import { Plus } from 'react-feather';
+import { Loader } from 'shared/components/Loader';
 import { NoResults } from 'shared/components/NoResults';
 import { PageError } from 'shared/components/PageError';
+import {
+  showErrorMessage,
+  showLoadingMessage,
+  showSuccessMessage,
+} from 'util/messages';
 import { Status } from 'util/status';
 import { ShiftTypesTable } from './ShiftTypesTable';
 import * as Styled from './styled';
-import { showLoadingMessage, showSuccessMessage, showErrorMessage } from 'util/messages';
+import { Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+
+const { confirm } = Modal;
+
+const showDeletionConfirm = (onOk: (shiftTypeDto: ShiftTypeDto) => any) => {
+  confirm({
+    title: 'Do you want to delete this shift type?',
+    icon: <ExclamationCircleOutlined />,
+    onOk,
+  });
+};
 
 type Props = {
   workplace: WorkplaceDto;
@@ -18,10 +35,7 @@ const ShiftTypes = ({ workplace }: Props) => {
   const [status, setStatus] = useState(Status.Idle);
   const [shiftTypes, setShiftTypes] = useState<ShiftTypeDto[]>([]);
 
-  const onPropChange = (
-    changes: Partial<ShiftTypeDto>,
-    recordId: string,
-  ) => {
+  const onPropChange = (changes: Partial<ShiftTypeDto>, recordId: string) => {
     const newData = [...shiftTypes];
     const index = newData.findIndex(item => recordId === item.id);
     const item = shiftTypes[index];
@@ -35,6 +49,16 @@ const ShiftTypes = ({ workplace }: Props) => {
     showLoadingMessage();
     updateShiftType(updatedItem)
       .then(showSuccessMessage)
+      .catch(showErrorMessage);
+  };
+
+  const onDeleteConfirmed = (shiftTypeDto: ShiftTypeDto) => {
+    showLoadingMessage();
+    deleteShiftType(shiftTypeDto)
+      .then(() => {
+        setShiftTypes(prev => prev.filter(item => item.id !== shiftTypeDto.id));
+        showSuccessMessage();
+      })
       .catch(showErrorMessage);
   };
 
@@ -54,18 +78,24 @@ const ShiftTypes = ({ workplace }: Props) => {
 
   return (
     <>
-      {status === Status.Loading && <Loader />}
-      {status === Status.Rejected && <PageError />}
-      {status === Status.Resolved && !shiftTypes!.length && <NoResults />}
-      {status === Status.Resolved && !!shiftTypes!.length && (
-        <Styled.ShiftTypesContainer>
-          <Styled.TableHeader>
-            <span>Shift Types</span>
-            <Plus onClick={initCreatingShiftType} />
-          </Styled.TableHeader>
-          <ShiftTypesTable data={shiftTypes} onPropChange={onPropChange} />
-        </Styled.ShiftTypesContainer>
-      )}
+      <Styled.ShiftTypesContainer>
+        {status === Status.Loading && <Loader />}
+        {status === Status.Rejected && <PageError />}
+        {status === Status.Resolved && !shiftTypes!.length && <NoResults />}
+        {status === Status.Resolved && !!shiftTypes!.length && (
+          <>
+            <Styled.TableHeader>
+              <span>Shift Types</span>
+              <Plus onClick={initCreatingShiftType} />
+            </Styled.TableHeader>
+            <ShiftTypesTable
+              data={shiftTypes}
+              onPropChange={onPropChange}
+              onDeleteClick={shiftTypeDto => showDeletionConfirm(() => onDeleteConfirmed(shiftTypeDto))}
+            />
+          </>
+        )}
+      </Styled.ShiftTypesContainer>
     </>
   );
 };

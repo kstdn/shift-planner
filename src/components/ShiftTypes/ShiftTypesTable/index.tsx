@@ -8,17 +8,27 @@ import { EditableCell } from './EditableCell';
 import { EditableRow } from './EditableRow';
 
 type Props = {
-  data: ShiftTypeDto[],
-  onPropChange: (changes: Partial<ShiftTypeDto>, recordId: string, data: ShiftTypeDto[]) => any;
-}
+  data: ShiftTypeDto[];
+  onPropChange: (
+    changes: Partial<ShiftTypeDto>,
+    recordId: string,
+    data: ShiftTypeDto[],
+  ) => any;
+  onDeleteClick: (shiftTyepDto: ShiftTypeDto) => any;
+};
 
-export const ShiftTypesTable = ({ data, onPropChange }: Props) => {
+export const ShiftTypesTable = ({
+  data,
+  onPropChange,
+  onDeleteClick,
+}: Props) => {
   const columns: ColumnsType<ShiftTypeDto> = [
     {
       title: 'Order',
       dataIndex: 'sortOrder',
       width: '75px',
-    },{
+    },
+    {
       title: 'Name',
       dataIndex: 'name',
       width: '200px',
@@ -36,14 +46,20 @@ export const ShiftTypesTable = ({ data, onPropChange }: Props) => {
         <VisualizationPicker
           position={record.position}
           backgroundColor={record.backgroundColor}
-          onChange={changes => onPropChange(changes, record.id, data) }
+          onChange={changes => onPropChange(changes, record.id, data)}
         />
       ),
-    }, {
+    },
+    {
       title: '',
       align: 'right',
-      render: () => <Button icon={<DeleteTwoTone />}></Button> 
-    }
+      render: (placeholderParam, record) => (
+        <Button
+          onClick={() => onDeleteClick(record)}
+          icon={<DeleteTwoTone />}
+        ></Button>
+      ),
+    },
   ];
 
   const components = {
@@ -53,12 +69,14 @@ export const ShiftTypesTable = ({ data, onPropChange }: Props) => {
     },
   };
 
-  return <Table
-    components={components}
-    rowClassName={() => 'editable-row'}
-    columns={columns}
-    dataSource={data}
-    rowKey={'id'}
-    pagination={false}
-  />;
+  return (
+    <Table
+      components={components}
+      rowClassName={() => 'editable-row'}
+      columns={columns}
+      dataSource={data}
+      rowKey={'id'}
+      pagination={false}
+    />
+  );
 };

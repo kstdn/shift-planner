@@ -10,4 +10,7 @@ export const TableHeader = styled.span`
 
 export const ShiftTypesContainer = styled.div`
   margin: 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 `;
