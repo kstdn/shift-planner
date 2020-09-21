@@ -1,8 +1,9 @@
-import { Button, Card, Form, Input } from 'antd';
+import { Button, Form, Input } from 'antd';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { login } from 'store/actions';
+import Modal from 'antd/lib/modal/Modal';
 
 const StyledAuthContainer = styled.div`
   display: flex;
@@ -46,7 +47,7 @@ export const Authentication = () => {
 
   return (
     <StyledAuthContainer>
-    <Card style={{ width: 450 }}>
+    <Modal visible={true} footer={null} closable={false} >
       <Form
         {...layout}
         name='basic'
@@ -70,17 +71,13 @@ export const Authentication = () => {
           <Input.Password />
         </Form.Item>
 
-        {/* <Form.Item {...tailLayout} name='remember' valuePropName='checked'>
-          <Checkbox>Remember me</Checkbox>
-        </Form.Item> */}
-
         <Form.Item {...tailLayout}>
           <Button type='primary' htmlType='submit'>
             Submit
           </Button>
         </Form.Item>
       </Form>
-    </Card>
+    </Modal>
     </StyledAuthContainer>
   );
 };
