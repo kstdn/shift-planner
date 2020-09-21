@@ -42,6 +42,7 @@ export const ShiftTypesTable = ({
     },
     {
       title: 'Visualization',
+      align: 'center',
       render: (placeholderParam, record) => (
         <VisualizationPicker
           position={record.position}

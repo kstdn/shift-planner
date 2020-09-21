@@ -8,6 +8,8 @@ import {
 } from 'constant-values';
 import { store } from 'store';
 import { refreshTokenFailure } from 'store/actions';
+import { refreshTokenSuccess } from 'store/actions';
+import { getCurrentUser } from 'api/util';
 
 const config: AxiosRequestConfig = {
   baseURL: baseUrl,
@@ -67,7 +69,7 @@ async function resetTokenAndReattemptRequest(
           return Promise.reject(error);
         }
         isAlreadyFetchingAccessToken = false;
-        onAccessTokenFetchSuccess();
+        onAccessTokenFetchSuccess(getCurrentUser(), dispatch);
       } catch {
         onAccessTokenFetchError(dispatch);
         return Promise.reject(error);
@@ -83,7 +85,8 @@ const onAccessTokenFetchError = (dispatch: Dispatch) => {
   dispatch(refreshTokenFailure());
 };
 
-const onAccessTokenFetchSuccess = () => {
+const onAccessTokenFetchSuccess = (user: string, dispatch: Dispatch) => {
+  dispatch(refreshTokenSuccess(user));
   subscribers.forEach(callback => callback());
   subscribers = [];
 };
