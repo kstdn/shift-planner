@@ -4,6 +4,8 @@ import { ShiftTypePosition } from 'api/modules/workplaces/dto/shift-type-positio
 
 type ContainerProps = {
   highlight: boolean;
+  transparent?: boolean;
+  fillContainer?: boolean;
 }
 
 const Container = styled.div<ContainerProps>`
@@ -13,10 +15,10 @@ const Container = styled.div<ContainerProps>`
   width: 50px;
   height: 50px;
   position: relative;
-  box-shadow: 0 0 0 1px rgba(0,0,0,.1);
-  background-color: white;
+  ${props => !!props.transparent ? 'background-color: transparent;' : 'background-color: white; box-shadow: 0 0 0 1px rgba(0,0,0,.1);'}
   ${props => !!props.onClick ? 'cursor: pointer;' : ''}
-  ${props => !!props.highlight ? 'box-shadow: 0 0 2px 0;' : ''}
+  ${props => !!props.highlight ? 'outline: 2px solid var(--primary);' : ''}
+  ${props => !!props.fillContainer ? 'width: 100%; height: 100%;' : ''}
 `;
 
 type PositionTileProps = {
@@ -29,55 +31,57 @@ const PositionTile = styled.div<PositionTileProps>`
   position: absolute;
   border-radius: 2px;
   background-color: ${ props => props.color };
+  margin: var(--offset);
+
   ${ props => {
     switch (props.position) {
       case ShiftTypePosition.Full:
         return css`
-          top: var(--offset);
-          right: var(--offset);
-          bottom: var(--offset);
-          left: var(--offset);
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
         `;
       case ShiftTypePosition.Top:
         return css`
-          top: var(--offset);
-          right: var(--offset);
+          top: 0;
+          right: 0;
           bottom: 50%;
-          left: var(--offset);
+          left: 0;
         `;
       case ShiftTypePosition.TopLeft:
         return css`
-          top: var(--offset);
+          top: 0;
           right: 50%;
           bottom: 50%;
-          left: var(--offset);
+          left: 0;
         `;
       case ShiftTypePosition.TopRight:
         return css`
-          top: var(--offset);
-          right: var(--offset);
+          top: 0;
+          right: 0;
           bottom: 50%;
           left: 50%;
         `;
       case ShiftTypePosition.Bottom:
         return css`
           top: 50%;
-          right: var(--offset);
-          bottom: var(--offset);
-          left: var(--offset);
+          right: 0;
+          bottom: 0;
+          left: 0;
         `;
       case ShiftTypePosition.BottomLeft:
         return css`
           top: 50%;
           right: 50%;
-          bottom: var(--offset);
-          left: var(--offset);
+          bottom: 0;
+          left: 0;
         `;
       case ShiftTypePosition.BottomRight:
         return css`
           top: 50%;
-          right: var(--offset);
-          bottom: var(--offset);
+          right: 0;
+          bottom: 0;
           left: 50%;
         `;
       default:
@@ -90,12 +94,14 @@ type Props = {
   position: ShiftTypePosition;
   color: string;
   highlight?: boolean;
+  noBackground?: boolean;
+  fillContainer?: boolean;
   onClick?: () => any;
 };
 
-const PositionVisualiser = ({ position, color, highlight = false, onClick }: Props) => {
+const PositionVisualiser = ({ position, color, noBackground, fillContainer, highlight = false, onClick }: Props) => {
   return (
-    <Container onClick={onClick} highlight={highlight}>
+    <Container onClick={onClick} highlight={highlight} transparent={noBackground} fillContainer={fillContainer} >
       <PositionTile position={position} color={color} />
     </Container>
   );

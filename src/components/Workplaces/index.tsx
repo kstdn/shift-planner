@@ -16,7 +16,7 @@ const Workplaces = () => {
 
   useEffect(() => {
     setStatus(Status.Loading);
-    getWorkplaces()
+    getWorkplaces(false)
       .then(result => {
         setWorkplaces(result);
         setStatus(Status.Resolved);

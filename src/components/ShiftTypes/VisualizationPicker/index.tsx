@@ -46,6 +46,7 @@ const VisualizationPicker = ({ position: positionProp, backgroundColor: backgrou
         onClick={() => setVisible(prev => !prev)}
       />
       <Modal
+        centered
         title='Visualization'
         visible={visible}
         onCancel={() => cancel()}

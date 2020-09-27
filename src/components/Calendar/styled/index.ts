@@ -24,7 +24,19 @@ export const CalendarCell = styled.div`
   }
 `;
 
-export const CalendarCellInner = styled.div`
+export const CalendarCellDate = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
   padding: 4px;
   line-height: 1rem;
+  z-index: 1;
+`;
+
+export const CalendarCellInner = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 `;

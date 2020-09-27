@@ -8,6 +8,7 @@ const StyledSidebarLink = styled.div<any>`
   cursor: pointer;
   margin-top: var(--base-padding);
   justify-content: flex-end;
+  user-select: none;
 `;
 
 const IconWrapper = styled.span`

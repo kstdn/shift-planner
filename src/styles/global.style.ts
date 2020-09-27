@@ -59,6 +59,7 @@ export const GlobalStyle = createGlobalStyle`
   .ant-picker-content th,
   .ant-picker-content td {
     color: var(--text-color);
+    -webkit-text-stroke: 0.5px var(--bg-body);
   }
 
   .ant-picker-calendar-full, 
@@ -98,13 +99,13 @@ export const GlobalStyle = createGlobalStyle`
   .ant-picker-calendar thead tr {
     display: flex;
     overflow: hidden;
-    height: 100%;
   }
 
   .ant-picker-date-panel .ant-picker-content th, 
   .ant-picker-date-panel .ant-picker-content td.ant-picker-cell {
     --size: calc(100vw/7);
     width: var(--size);
+    height: var(--size);
   }
 
   .ant-picker-calendar thead tr th {
@@ -124,7 +125,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   .ant-picker-cell.ant-picker-cell-in-view {
-    font-weight: bold;
+    font-weight: 800;
   }
 
   .ant-picker-cell.ant-picker-cell-today {

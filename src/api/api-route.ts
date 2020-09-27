@@ -9,4 +9,6 @@ export const ApiRoute = {
 
   Workplaces: 'shift-planner/workplaces',
   ShiftTypes: (workplaceId: string) => `shift-planner/workplaces/${workplaceId}/shift-types`,
+  WorkplaceShifts: (workplaceId: string) => `shift-planner/workplaces/${workplaceId}/shifts`,
+  Shifts: 'shift-planner/shifts',
 };

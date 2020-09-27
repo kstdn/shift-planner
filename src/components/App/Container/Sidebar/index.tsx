@@ -1,15 +1,19 @@
-import React, { FC, useState, useContext } from 'react';
-import * as Styled from './styled';
 import { MessageContext } from 'context/MessageContext';
+import React, { FC, ReactNode, useContext } from 'react';
+import * as Styled from './styled';
 
-export const Sidebar: FC = ({ children }) => {
-  const [open, setOpen] = useState<boolean>(true);
+type Props = {
+  open: boolean;
+  toggle: () => any;
+  children: ReactNode;
+} 
+
+export const Sidebar: FC<Props> = ({ open, toggle, children }: Props) => {
   const { message } = useContext(MessageContext);
-
 
   return (
     <Styled.Sidebar open={open}>
-      <Styled.MenuIconRow onClick={() => setOpen(!open)}>
+      <Styled.MenuIconRow onClick={toggle}>
         { message }
         <Styled.MenuIcon open={open} />
       </Styled.MenuIconRow>

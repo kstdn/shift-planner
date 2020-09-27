@@ -1,4 +1,4 @@
-import { ArrowDown, ChevronDown } from 'react-feather';
+import { ChevronDown } from 'react-feather';
 import styled from 'styled-components';
 
 export const Sidebar = (() => {
@@ -6,7 +6,7 @@ export const Sidebar = (() => {
     'calc(var(--base-icon-width) + (2 * var(--base-padding)))';
 
   return styled.nav<{ open: boolean }>`
-    height: ${props => (props.open ? '200px' : closedWidth)};
+    height: ${props => (props.open ? '250px' : closedWidth)};
     padding: var(--base-padding);
     background-color: var(--primary);
     color: var(--primary-text);
