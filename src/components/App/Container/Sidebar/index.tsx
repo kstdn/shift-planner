@@ -15,6 +15,7 @@ export const Sidebar: FC<Props> = ({ open, toggle, children }: Props) => {
     <Styled.Sidebar open={open}>
       <Styled.MenuIconRow onClick={toggle}>
         { message }
+        <div style={{ flexGrow: 1 }}/>
         <Styled.MenuIcon open={open} />
       </Styled.MenuIconRow>
       <Styled.SidebarContent>{children}</Styled.SidebarContent>
