@@ -6,3 +6,8 @@ export interface ShiftDto {
   shiftTypeId: string;
   shiftType: ShiftTypeDto;
 }
+
+export interface CreateShiftDto {
+  startDate: string;
+  shiftTypeId: string;
+}

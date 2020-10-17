@@ -2,7 +2,7 @@ import { ApiRoute } from 'api/api-route';
 import { httpClient } from 'util/http-client';
 import { WorkplaceDto } from './dto/workplace.dto';
 import { ShiftTypeDto } from './dto/shift-type.dto';
-import { ShiftDto } from './dto/shift.dto';
+import { ShiftDto, CreateShiftDto } from './dto/shift.dto';
 
 export const getWorkplaces = (includeShiftTypes: boolean) => {
   return httpClient.get<WorkplaceDto[], WorkplaceDto[]>(ApiRoute.Workplaces, {
@@ -37,7 +37,7 @@ export const getShifts = (from: Date, to: Date) => {
   });
 };
 
-export const createShift = (workplaceId: string, shiftDto: ShiftDto) => {
+export const createShift = (workplaceId: string, shiftDto: CreateShiftDto) => {
   return httpClient.post<ShiftDto, ShiftDto>(ApiRoute.WorkplaceShifts(workplaceId), shiftDto);
 };
 
