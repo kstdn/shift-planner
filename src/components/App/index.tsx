@@ -23,6 +23,7 @@ import InsertionModeSidebarItem from 'components/Calendar/InsertionModeSidebarIt
 import { InsertModeContext } from 'context/InsertModeContext';
 import { WorkplaceDto } from 'api/modules/workplaces/dto/workplace.dto';
 
+
 export const App: FC = () => {
   const dispatch = useDispatch();
   const authStatus = useSelector(getAuthStatus);
