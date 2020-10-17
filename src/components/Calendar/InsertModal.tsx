@@ -1,8 +1,12 @@
 import { Modal, Select } from 'antd';
-import { WorkplacesContext } from 'context/WorkplacesContext';
+import { InsertModeContext } from 'context/InsertModeContext';
 import React, { useContext, useState } from 'react';
 import PositionVisualiser from 'shared/components/PositionVisualiser';
 import styled from 'styled-components';
+import { format } from 'date-fns';
+import { createShiftType, createShift } from 'api/modules/workplaces';
+import { showErrorMessage, showSuccessMessage } from 'util/messages';
+import { ShiftDto } from 'api/modules/workplaces/dto/shift.dto';
 
 const StyledShiftTypesContainer = styled.div`
   display: flex;
@@ -21,17 +25,17 @@ const StyledShiftTypeContainer = styled.div`
 const { Option } = Select;
 
 type Props = {
-  visible: boolean;
-  insertConfirmed: () => any;
-  insertCanceled: () => any;
+  onInsertSuccess: (shift: ShiftDto) => any;
 };
 
-const InsertModal = ({ visible, insertConfirmed, insertCanceled }: Props) => {
+const InsertModal = ({ onInsertSuccess }: Props) => {
   const {
+    setInsertModalVisible,
     workplaces,
     mostRecentlyUsedWorkplace,
+    insertDate,
     setMostRecentlyUsedWorkplace,
-  } = useContext(WorkplacesContext);
+  } = useContext(InsertModeContext);
 
   const [selectedWorkplace, setSelectedWorkplace] = useState(
     mostRecentlyUsedWorkplace || workplaces?.[0],
@@ -50,15 +54,29 @@ const InsertModal = ({ visible, insertConfirmed, insertCanceled }: Props) => {
     insertConfirmed();
   };
 
+  const insertConfirmed = () => {
+    setInsertModalVisible(false);
+    setSelectedShiftType(selectedWorkplace?.shiftTypes?.[0]);
+    createShift(selectedWorkplace!.id, {
+      startDate: insertDate.toISOString(),
+      shiftTypeId: selectedShiftType!.id!,
+    })
+      .then(shift => {
+        showSuccessMessage();
+        onInsertSuccess(shift);
+      })
+      .catch(showErrorMessage);
+  };
+
   return (
     <Modal
       centered
-      title='Add shift'
-      visible={visible}
+      title={`Add shift for ${format(insertDate, 'dd/MM')}`}
+      visible={true}
       onOk={onOk}
-      onCancel={insertCanceled}
+      onCancel={() =>  setInsertModalVisible(false)}
       okButtonProps={{
-        disabled: !selectedShiftType
+        disabled: !insertDate || !selectedWorkplace || !selectedShiftType,
       }}
     >
       <div>
@@ -69,7 +87,9 @@ const InsertModal = ({ visible, insertConfirmed, insertCanceled }: Props) => {
           onChange={onSelectedWorkplaceChange}
         >
           {(workplaces || []).map(wp => (
-            <Option value={wp.id} key={wp.id}>{wp.name}</Option>
+            <Option value={wp.id} key={wp.id}>
+              {wp.name}
+            </Option>
           ))}
         </Select>
         <StyledShiftTypesContainer>

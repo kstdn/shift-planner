@@ -1,47 +1,51 @@
 import { getWorkplaces } from 'api/modules/workplaces';
 import { SidebarLink } from 'components/App/Container/Sidebar/SidebarLink';
-import { WorkplacesContext } from 'context/WorkplacesContext';
+import { InsertModeContext } from 'context/InsertModeContext';
 import React, { useContext, useEffect, useState } from 'react';
 import { PlusSquare, XSquare } from 'react-feather';
 import { Status } from 'util/status';
 
 type Props = {
-  onInsertModeActivated: Function;
   setWorkplaces: Function;
 };
 
-const InsertionModeSidebarItem = ({ onInsertModeActivated, setWorkplaces }: Props) => {
-  const [active, setActive] = useState(false);
-
+const InsertionModeSidebarItem = ({
+  setWorkplaces,
+}: Props) => {
+  const { insertModeActive, setInsertModeActive } = useContext(
+    InsertModeContext,
+  );
   const [status, setStatus] = useState(Status.Idle);
-  const { workplaces } = useContext(WorkplacesContext);
+  const { workplaces } = useContext(InsertModeContext);
 
   useEffect(() => {
     if (workplaces) return;
-    if (!active) return;
+    if (!insertModeActive) return;
 
     setStatus(Status.Loading);
     getWorkplaces(true)
       .then(result => {
-        onInsertModeActivated();
         setWorkplaces(result);
         setStatus(Status.Resolved);
       })
       .catch(error => {
         setStatus(Status.Rejected);
       });
-  }, [active, workplaces]);
+  }, [insertModeActive, workplaces]);
 
   return (
     <>
       <SidebarLink
         onClick={() => {
-          setActive(active => !active);
-          if (workplaces && !active) onInsertModeActivated();
+          setInsertModeActive(active => !active);
         }}
-        icon={active ? <XSquare /> : <PlusSquare />}
+        icon={insertModeActive ? <XSquare /> : <PlusSquare />}
       >
-        {status === Status.Loading ? 'Loading...' : active ? 'Exit Insert Mode' : 'Enter Insert Mode'}
+        {status === Status.Loading
+          ? 'Loading...'
+          : insertModeActive
+          ? 'Exit Insert Mode'
+          : 'Enter Insert Mode'}
       </SidebarLink>
     </>
   );

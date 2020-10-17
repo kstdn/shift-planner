@@ -1,68 +1,24 @@
-import { HeaderRender } from 'antd/es/calendar/generateCalendar';
 import locale from 'antd/es/date-picker/locale/en_GB';
-import { getShifts } from 'api/modules/workplaces';
+import { getShifts, createShift } from 'api/modules/workplaces';
 import { ShiftDto } from 'api/modules/workplaces/dto/shift.dto';
 import { MessageContext } from 'context/MessageContext';
-import {
-  add,
-  format,
-  isSameDay,
-  startOfMonth,
-  startOfToday,
-  startOfWeek,
-  sub
-} from 'date-fns';
+import { InsertModeContext } from 'context/InsertModeContext';
+import { isSameDay, startOfMonth, startOfToday, startOfWeek } from 'date-fns';
 import { addWeeks } from 'date-fns/esm';
 import React, { useContext, useEffect, useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'react-feather';
 import { Loader } from 'shared/components/Loader';
 import { PageError } from 'shared/components/PageError';
-import PositionVisualiser from 'shared/components/PositionVisualiser';
 import { Status } from 'util/status';
 import AntCalendar from './AntCalendar';
+import { DateCell } from './DateCell';
+import { HeaderCell } from './HeaderCell';
 import InsertModal from './InsertModal';
-import * as Styled from './styled';
-
-function dateCellRender(value: Date, shifts: ShiftDto[]) {
-  return (
-    <Styled.CalendarCell>
-      <Styled.CalendarCellDate>
-        {new Date(value).getDate()}
-      </Styled.CalendarCellDate>
-      {shifts.map(shift => (
-        <Styled.CalendarCellInner key={shift.id}>
-          <PositionVisualiser
-            noBackground
-            fillContainer
-            position={shift.shiftType.position}
-            color={shift.shiftType.backgroundColor}
-          />
-        </Styled.CalendarCellInner>
-      ))}
-    </Styled.CalendarCell>
-  );
-}
-
-const headerRender: HeaderRender<Date> = ({ value, onChange }) => {
-  return (
-    <Styled.CalendarHeader>
-      <ChevronLeft
-        onClick={() => onChange(sub(value, { months: 1 }))}
-      ></ChevronLeft>
-      <div>{format(value, 'MMMM')}</div>
-      <ChevronRight
-        onClick={() => onChange(add(value, { months: 1 }))}
-      ></ChevronRight>
-    </Styled.CalendarHeader>
-  );
-};
 
 export const Calendar = () => {
   const [status, setStatus] = useState(Status.Idle);
   const [shifts, setShifts] = useState<ShiftDto[]>([]);
 
-  const [insertModalVisible, setInsertModalVisible] = useState(false);
-
+  const { insertModeActive, insertModalVisible, setInsertModalVisible, insertDate, setInsertDate } = useContext(InsertModeContext);
   const { setMessage } = useContext(MessageContext);
 
   const getFirstVisibleDate = () => {
@@ -93,13 +49,16 @@ export const Calendar = () => {
   };
 
   const onSelect = (value: Date) => {
-    setInsertModalVisible(true);
+    if (insertModeActive) {
+      setInsertDate(value);
+      setInsertModalVisible(true);
+    } else {
+    }
   };
 
-  const insertConfirmed = () => {
-    setInsertModalVisible(false);
-    console.log('Inserted!');
-  }
+  const onInsertSuccess = (shift: ShiftDto) => {
+    setShifts(prev => [...prev, shift]);
+  };
 
   return (
     <>
@@ -108,15 +67,15 @@ export const Calendar = () => {
       {status === Status.Resolved && (
         <AntCalendar
           locale={locale}
-          dateFullCellRender={value =>
-            dateCellRender(value, getShiftsForDate(value))
-          }
-          headerRender={headerRender}
+          dateFullCellRender={value => (
+            <DateCell value={value} shifts={getShiftsForDate(value)} />
+          )}
+          headerRender={HeaderCell}
           onSelect={onSelect}
         />
       )}
       {insertModalVisible && (
-        <InsertModal visible={insertModalVisible} insertConfirmed={insertConfirmed} insertCanceled={() => setInsertModalVisible(false)} />
+        <InsertModal onInsertSuccess={shift => onInsertSuccess(shift)}/>
       )}
     </>
   );
