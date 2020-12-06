@@ -90,8 +90,6 @@ const ShiftTypes = ({ workplace }: Props) => {
       });
   }, [workplace]);
 
-  const initCreatingShiftType = () => {};
-
   return (
     <>
       <Styled.ShiftTypesContainer>

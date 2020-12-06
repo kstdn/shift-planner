@@ -28,10 +28,6 @@ type FormValues = {
 export const Authentication = () => {
   const dispatch = useDispatch();
 
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
-  };
-
   const handleSubmit = ({ username, password }: FormValues) => {
     dispatch(
       login({

@@ -4,7 +4,7 @@ import React, { useContext, useState } from 'react';
 import PositionVisualiser from 'shared/components/PositionVisualiser';
 import styled from 'styled-components';
 import { format } from 'date-fns';
-import { createShiftType, createShift } from 'api/modules/workplaces';
+import { createShift } from 'api/modules/workplaces';
 import { showErrorMessage, showSuccessMessage } from 'util/messages';
 import { ShiftDto } from 'api/modules/workplaces/dto/shift.dto';
 

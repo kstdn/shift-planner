@@ -31,7 +31,7 @@ const InsertionModeSidebarItem = ({
       .catch(error => {
         setStatus(Status.Rejected);
       });
-  }, [insertModeActive, workplaces]);
+  }, [insertModeActive, workplaces, setWorkplaces]);
 
   return (
     <>

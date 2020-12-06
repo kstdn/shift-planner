@@ -1,7 +1,6 @@
 import locale from 'antd/es/date-picker/locale/en_GB';
-import { getShifts, createShift } from 'api/modules/workplaces';
+import { getShifts } from 'api/modules/workplaces';
 import { ShiftDto } from 'api/modules/workplaces/dto/shift.dto';
-import { MessageContext } from 'context/MessageContext';
 import { InsertModeContext } from 'context/InsertModeContext';
 import { isSameDay, startOfMonth, startOfToday, startOfWeek } from 'date-fns';
 import { addWeeks } from 'date-fns/esm';
@@ -18,28 +17,27 @@ export const Calendar = () => {
   const [status, setStatus] = useState(Status.Idle);
   const [shifts, setShifts] = useState<ShiftDto[]>([]);
 
-  const { insertModeActive, insertModalVisible, setInsertModalVisible, insertDate, setInsertDate } = useContext(InsertModeContext);
-  const { setMessage } = useContext(MessageContext);
-
-  const getFirstVisibleDate = () => {
-    const today = startOfToday();
-    const startOfCurrentMonth = startOfMonth(today);
-    return startOfWeek(startOfCurrentMonth, { weekStartsOn: 1 });
-  };
-
-  const getLastVisibleDate = () => {
-    const firstVisibleDate = getFirstVisibleDate();
-    return addWeeks(firstVisibleDate, 6);
-  };
+  const { insertModeActive, insertModalVisible, setInsertModalVisible, setInsertDate } = useContext(InsertModeContext);
 
   useEffect(() => {
+    const getFirstVisibleDate = () => {
+      const today = startOfToday();
+      const startOfCurrentMonth = startOfMonth(today);
+      return startOfWeek(startOfCurrentMonth, { weekStartsOn: 1 });
+    };
+  
+    const getLastVisibleDate = () => {
+      const firstVisibleDate = getFirstVisibleDate();
+      return addWeeks(firstVisibleDate, 6);
+    };
+
     setStatus(Status.Loading);
     getShifts(getFirstVisibleDate(), getLastVisibleDate())
       .then(result => {
         setShifts(result);
         setStatus(Status.Resolved);
       })
-      .catch(error => {
+      .catch(() => {
         setStatus(Status.Rejected);
       });
   }, []);
