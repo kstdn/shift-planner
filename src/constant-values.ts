@@ -1,4 +1,4 @@
-export const baseUrl = "https://grizzly-services.herokuapp.com";
+export const baseUrl = "/api";
 
 // Redux Saga Constants
 export const invalidateCacheAfter = 300000;
