@@ -9,7 +9,7 @@ const StyledMain = styled.main`
   overflow: auto;
   display: flex;
   flex-direction: column;
-  max-width: var(--max-main-width);
+  width: min(100%, var(--max-main-width));
   padding-bottom: var(--sidebar-closed-height);
 `;
 
