@@ -18,6 +18,9 @@ export const GlobalStyle = createGlobalStyle`
 
     --base-icon-width: 24px;
 
+    --max-main-width: 640px;
+    --sidebar-closed-height: calc(var(--base-icon-width) + (2 * var(--base-padding)));
+
     ${props => (props.theme === 'light' ? lightThemeVars : darkThemeVars)};
   }
 
@@ -76,6 +79,8 @@ export const GlobalStyle = createGlobalStyle`
   .ant-picker-calendar-full {
     display: flex;
     flex-direction: column;
+    border-left: 1px solid var(--bg-secondary);
+    border-right: 1px solid var(--bg-secondary);
   }
 
   table.ant-picker-content {
@@ -103,7 +108,7 @@ export const GlobalStyle = createGlobalStyle`
 
   .ant-picker-date-panel .ant-picker-content th, 
   .ant-picker-date-panel .ant-picker-content td.ant-picker-cell {
-    --size: calc(100vw/7);
+    --size: calc(min(100vw, var(--max-main-width))/7);
     width: var(--size);
     height: var(--size);
   }

@@ -9,6 +9,8 @@ const StyledMain = styled.main`
   overflow: auto;
   display: flex;
   flex-direction: column;
+  max-width: var(--max-main-width);
+  padding-bottom: var(--sidebar-closed-height);
 `;
 
 export const Main: FC = ({ children }) => {

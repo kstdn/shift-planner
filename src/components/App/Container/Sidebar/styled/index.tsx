@@ -2,11 +2,8 @@ import { ChevronDown } from 'react-feather';
 import styled from 'styled-components';
 
 export const Sidebar = (() => {
-  const closedWidth =
-    'calc(var(--base-icon-width) + (2 * var(--base-padding)))';
-
   return styled.nav<{ open: boolean }>`
-    height: ${props => (props.open ? '250px' : closedWidth)};
+    height: ${props => (props.open ? '250px' : 'var(--sidebar-closed-height)')};
     padding: var(--base-padding);
     background-color: var(--primary);
     color: var(--primary-text);
@@ -17,6 +14,11 @@ export const Sidebar = (() => {
       var(--base-animation-timing);
     flex-shrink: 0;
     align-items: flex-end;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 1;
   `;
 })();
 
